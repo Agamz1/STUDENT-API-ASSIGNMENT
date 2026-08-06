@@ -1,5 +1,5 @@
 # User API Assignment
-Submitted by Michael Okeorji Ayobami (michaelayobami96@gmail.com)
+Submitted by Michael Okeorji Ayobami 
 Backend Development class, Hajime cohort, TS Academy.
 
 ## Description
