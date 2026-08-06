@@ -1,0 +1,45 @@
+$kind: http-request
+name: Create Student
+method: POST
+url: '{{baseUrl}}/students'
+order: 2000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Alice Johnson",
+      "email": "alice@example.com",
+      "age": 22
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 201", function () {
+        pm.response.to.have.status(201);
+      });
+
+      pm.test("Response has required fields", function () {
+        var json = pm.response.json();
+        pm.expect(json).to.have.property("id").that.is.a("number");
+        pm.expect(json).to.have.property("name");
+        pm.expect(json).to.have.property("email");
+        pm.expect(json).to.have.property("age");
+        pm.expect(json).to.have.property("createdAt");
+        pm.expect(json).to.have.property("updatedAt");
+      });
+
+      pm.test("Response fields have correct values", function () {
+        var json = pm.response.json();
+        pm.expect(json.name).to.eql("Alice Johnson");
+        pm.expect(json.email).to.eql("alice@example.com");
+        pm.expect(json.age).to.eql(22);
+      });
+
+      pm.test("Save studentId to collection variable", function () {
+        var json = pm.response.json();
+        pm.collectionVariables.set("studentId", json.id);
+      });

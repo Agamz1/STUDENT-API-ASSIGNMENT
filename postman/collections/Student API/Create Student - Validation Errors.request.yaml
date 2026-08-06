@@ -1,0 +1,33 @@
+$kind: http-request
+name: 'Create Student - Validation Errors'
+method: POST
+url: '{{baseUrl}}/students'
+order: 8000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "",
+      "email": "not-an-email",
+      "age": -5
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 400", function () {
+        pm.response.to.have.status(400);
+      });
+
+      pm.test("Response has errors array", function () {
+        var json = pm.response.json();
+        pm.expect(json).to.have.property("errors").that.is.an("array");
+      });
+
+      pm.test("errors array length is greater than 0", function () {
+        var json = pm.response.json();
+        pm.expect(json.errors.length).to.be.above(0);
+      });

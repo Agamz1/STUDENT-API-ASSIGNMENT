@@ -1,0 +1,17 @@
+$kind: http-request
+name: 'Delete Student - Not Found'
+method: DELETE
+url: '{{baseUrl}}/students/999999'
+order: 11000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 404", function () {
+        pm.response.to.have.status(404);
+      });
+
+      pm.test("Response has error field", function () {
+        var json = pm.response.json();
+        pm.expect(json).to.have.property("error");
+      });

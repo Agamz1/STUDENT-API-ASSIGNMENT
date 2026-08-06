@@ -1,0 +1,35 @@
+$kind: http-request
+name: 'Update Student (PUT)'
+method: PUT
+url: '{{baseUrl}}/students/{{studentId}}'
+order: 5000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Alice Smith",
+      "email": "alice.smith@example.com",
+      "age": 23
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 200", function () {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Response fields have correct updated values", function () {
+        var json = pm.response.json();
+        pm.expect(json.name).to.eql("Alice Smith");
+        pm.expect(json.email).to.eql("alice.smith@example.com");
+        pm.expect(json.age).to.eql(23);
+      });
+
+      pm.test("updatedAt is different from createdAt", function () {
+        var json = pm.response.json();
+        pm.expect(json.updatedAt).to.not.eql(json.createdAt);
+      });

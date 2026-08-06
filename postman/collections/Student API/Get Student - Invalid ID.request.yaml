@@ -1,0 +1,17 @@
+$kind: http-request
+name: 'Get Student - Invalid ID'
+method: GET
+url: '{{baseUrl}}/students/abc'
+order: 10000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 400", function () {
+        pm.response.to.have.status(400);
+      });
+
+      pm.test("Response has error field equal to 'Invalid student id'", function () {
+        var json = pm.response.json();
+        pm.expect(json.error).to.eql("Invalid student id");
+      });

@@ -1,0 +1,22 @@
+$kind: http-request
+name: Get Student by ID
+method: GET
+url: '{{baseUrl}}/students/{{studentId}}'
+order: 4000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 200", function () {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("id matches studentId collection variable", function () {
+        var json = pm.response.json();
+        pm.expect(json.id).to.eql(pm.collectionVariables.get("studentId"));
+      });
+
+      pm.test("name equals 'Alice Johnson'", function () {
+        var json = pm.response.json();
+        pm.expect(json.name).to.eql("Alice Johnson");
+      });

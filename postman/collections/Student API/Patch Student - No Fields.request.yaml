@@ -1,0 +1,23 @@
+$kind: http-request
+name: 'Patch Student - No Fields'
+method: PATCH
+url: '{{baseUrl}}/students/{{studentId}}'
+order: 13000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: '{}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 400", function () {
+        pm.response.to.have.status(400);
+      });
+
+      pm.test("Response has error field equal to 'No valid fields provided to update'", function () {
+        var json = pm.response.json();
+        pm.expect(json.error).to.eql("No valid fields provided to update");
+      });

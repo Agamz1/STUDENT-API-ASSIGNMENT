@@ -1,0 +1,28 @@
+$kind: http-request
+name: 'Update Student - Not Found (PUT)'
+method: PUT
+url: '{{baseUrl}}/students/999999'
+order: 12000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Ghost",
+      "email": "ghost@example.com",
+      "age": 30
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 404", function () {
+        pm.response.to.have.status(404);
+      });
+
+      pm.test("Response has error field", function () {
+        var json = pm.response.json();
+        pm.expect(json).to.have.property("error");
+      });
